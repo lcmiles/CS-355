@@ -9,13 +9,12 @@ def shuffle(deck):
     return shuffled_deck
 
 def calculate_r(deck):
-    n = len(deck) // 2
-    sum_iyi = sum(i * deck[i-1] for i in range(1, n+1))
-    sqsum = sum(x**2 for x in range(1, n+1))
-    sumsq = sum(deck)**2
-    numerator = n * sum_iyi - sqsum
-    denominator = n * sumsq - sqsum
-    r = -(numerator / denominator)
+    n = len(deck)
+    sumi = n * (n + 1) // 2
+    sumsq = n * (n + 1) * (2 * n + 1) // 6
+    sqsum = sumi * sumi
+    sum_product = sum(i * (index + 1) for index, i in enumerate(deck))
+    r = (n * sum_product - sqsum) / (n * sumsq - sqsum)    
     return r
 
 def perform_experiment(num_cards):
@@ -35,7 +34,8 @@ def perform_experiment(num_cards):
         print("")
 
     for i, r, order in r_values:
-        plt.annotate(f'Shuffle: {i}\n r={r:.4f}', (i, r), xytext=(5, 5), textcoords='offset points', fontsize=8)
+        color = 'blue' if num_cards == 52 else 'orange'
+        plt.annotate(f'{r:.4f}', (i, r), xytext=(5, 5), textcoords='offset points', fontsize=8, color=color)
 
     plt.plot([r[0] for r in r_values], [r[1] for r in r_values], marker='o', label=f'{num_cards} Cards')
 
